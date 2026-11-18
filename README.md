@@ -104,48 +104,45 @@ El logotipo representa la idea de memoria y ubicación, combinando elementos de 
 
 ---
 
+
 <a id="metricas-y-modelos-matematicos"></a>
 # 4. Métricas y modelos matemáticos — [Volver al índice](#indice)
 
-Para calcular las estadísticas de viaje, posicionar los recuerdos en el mapa interactivo y gestionar el almacenamiento en la nube, **NaYeKa Memories** emplea modelos matemáticos de distintos ámbitos:
+Para calcular las estadísticas de viaje, posicionar los recuerdos en el mapa y gestionar el almacenamiento, **NaYeKa Memories** utiliza fórmulas matemáticas de distintos ámbitos:
 
-### 4.1. Cálculo de distancia entre dos recuerdos en el mapa (Trigonometría y Geodesia)
+### 4.1. Distancia aproximada entre dos recuerdos (Geometría)
 
-Para medir la distancia $d$ entre dos recuerdos geolocalizados con coordenadas $(\phi_1, \lambda_1)$ y $(\phi_2, \lambda_2)$ sobre el radio terrestre $R \approx 6371\text{ km}$, se aplica la fórmula del semiverseno:
+Para calcular la distancia $d$ en línea recta entre dos ubicaciones con coordenadas $(x_1, y_1)$ y $(x_2, y_2)$ en el mapa, se aplica el teorema de Pitágoras:
 
-$$d = 2R \cdot \arcsin\left(\sqrt{\sin^2\left(\frac{\phi_2 - \phi_1}{2}\right) + \cos(\phi_1)\cos(\phi_2)\sin^2\left(\frac{\lambda_2 - \lambda_1}{2}\right)}\right)$$
+$$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
 
-### 4.2. Clasificación de recuerdos por tamaño de archivo (Funciones a trozos)
+### 4.2. Porcentaje de "Mis metas de viaje" (Porcentajes y Proporciones)
 
-Al subir una fotografía o vídeo a Supabase Storage, el sistema clasifica la calidad de compresión $C(x)$ en función del peso del archivo $x$ (en MB):
+El porcentaje de progreso $P$ hacia el objetivo anual de lugares visitados ($M$) tras recorrer $v$ ubicaciones se calcula mediante:
 
-$$C(x) = \begin{cases} 1 & \text{si } 0 < x \leq 5 \\ 0{,}75 & \text{si } 5 < x \leq 20 \\ 0{,}5 & \text{si } x > 20 \end{cases}$$
+$$P = \frac{v}{M} \times 100$$
 
-### 4.3. Estadísticas de "Mis metas de viaje" (Estadística y Sumatorios)
+### 4.3. Media mensual de recuerdos guardados (Estadística)
 
-El porcentaje de progreso global $P$ de un usuario respecto a su meta anual $M$ tras visitar $n$ ubicaciones con puntuación $v_i$ se obtiene mediante:
+Para mostrar en el perfil de usuario la media $\bar{x}$ de recuerdos subidos a lo largo de los $12$ meses del año, se utiliza la media aritmética:
 
-$$P = \frac{1}{M}\sum_{i=1}^{n} v_i \times 100$$
+$$\bar{x} = \frac{1}{12} \sum_{i=1}^{12} x_i$$
 
-Además, la media aritmética de recuerdos guardados por mes en un año es $\bar{x} = \frac{1}{12}\sum_{i=1}^{12} x_i$.
+### 4.4. Espacio libre en Supabase Storage (Aritmética y Restas)
 
-### 4.4. Transformación de coordenadas en pantalla (Álgebra Lineal y Matrices)
+Si cada cuenta cuenta con un límite total $E_{\text{total}} = 1024\text{ MB}$ y los archivos ocupan $E_{\text{usado}}$, el espacio disponible restante $E_{\text{libre}}$ viene dado por $E_{\text{libre}} = E_{\text{total}} - E_{\text{usado}}$.
 
-Cuando el usuario hace *zoom* o desplaza el mapa en Flutter, la nueva posición en píxeles $(x', y')$ de un marcador se calcula mediante una matriz de transformación afín:
+### 4.5. Tamaño máximo permitido de vídeo (Desigualdades e Intervalos)
 
-$$\begin{pmatrix} x' \\ y' \end{pmatrix} = \begin{pmatrix} s_x & 0 \\ 0 & s_y \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} + \begin{pmatrix} t_x \\ t_y \end{pmatrix}$$
+Para garantizar una carga rápida, la duración $t$ (en segundos) de los vídeos subidos debe cumplir la siguiente condición:
 
-### 4.5. Reparto de almacenamiento entre carpetas públicas y privadas (Sistemas de ecuaciones)
+$$0 < t \leq 30$$
 
-Si un usuario dispone de $1024\text{ MB}$ gratuitos en la nube divididos entre el espacio ocupado por carpetas públicas ($x$) y carpetas privadas con contraseña ($y$), donde las privadas ocupan el triple que las públicas, el reparto se resuelve mediante:
+### 4.6. Total de recuerdos almacenados (Suma básica)
 
-$$\begin{cases} x + y = 1024 \\ y - 3x = 0 \end{cases}$$
+El número total de recuerdos $T$ de un usuario se calcula sumando los recuerdos guardados en carpetas públicas ($P$) y en carpetas privadas ($C$):
 
-### 4.6. Nivel de agrupación de marcadores según el zoom (Cálculo y Límites)
-
-A medida que el nivel de zoom $z$ tiende a infinito ($z \to \infty$), el radio de agrupación $r(z)$ de los recuerdos cercanos en el mapa tiende a cero para mostrar cada fotografía de forma individual:
-
-$$\lim_{z \to \infty} \frac{r_0}{2^z} = 0$$
+$$T = P + C$$
 
 ---
 
